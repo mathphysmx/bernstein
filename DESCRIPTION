@@ -1,0 +1,26 @@
+Package: bernstein
+Type: Package
+Title: Bernstein-bezier curves and surfaces
+Version: 0.1.0
+Date: 2016-15-03
+Authors@R: c(
+    person("Mendoza-Torres", "Francisco", email = "mentofran@gmail.com",             role = c("aut", "cre")),
+    person("Diaz-Viera",     "Martin A.", email = "mdiazv@imp.mx",                   role = "aut"),
+    person("Erdely",            "Arturo", email = "arturo.erdely@comunidad.unam.mx", role = "aut"))
+Depends:
+    R (>= 3.2)
+Maintainer: Francisco Mendoza-Torres <mentofran@gmail.com>
+Description: Bernstein-Bezier functions. This package was implemented to simulate the bivariate bernstein copula.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: TRUE
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
+Suggests: knitr,
+    rmarkdown,
+    lmomco,
+    copula,
+    copBasic
+Imports: stats,
+    empiricalDistribution,
+    inverseFunction

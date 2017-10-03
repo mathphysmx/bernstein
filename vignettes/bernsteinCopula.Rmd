@@ -1,0 +1,135 @@
+---
+title: "bernstein Copula"
+author: "Mendoza-Torres, Francisco * Diaz-Viera, Martin A. * Erdely, Arturo"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Loading the packages required
+
+```{r, message=FALSE}
+library(empiricalDistribution)
+library(bernstein)
+library(inverseFunction)
+library(copBasic)
+library(copula)
+library(lmomco)
+```
+
+# One-step simulation
+See the function `xySim` 
+
+# Analysis and simulation
+```{r, fig.show='hold'}
+data(PHIV_K)
+plot(PHIV_K,
+     xlim = c(0, 0.43), ylim = c(0,4500),
+     pch = 20,
+     xlab = "PHIV", ylab = "K")
+```
+
+```{r, fig.show='hold'}
+CDF_PHIV <- CDF(PHIV_K[,1], xlab = "PHIV")$CDF$obsp
+y <- seq(0.001, 0.999, by=.001)
+Q_PHIV_Kantorovich <- dat2bernqua(f = y, x = PHIV_K[, 1], poly.type= "Kantorovich")
+lines.default(Q_PHIV_Kantorovich, y, col = "red", lty = 2)
+```
+
+```{r, fig.show='hold'}
+CDF_K <- CDF(PHIV_K[,2], xlab = "K")$CDF$obsp
+Q_K_Kantorovich <- dat2bernqua(f = y, x = PHIV_K[, 2], poly.type= "Kantorovich")
+lines.default(Q_K_Kantorovich, y, col = "red", lty = 2)
+```
+
+```{r, label = dependenceAnalysisPlot, fig.show='hold'}
+xpixelse <- quantile(PHIV_K[, 1])
+ypixelse <- quantile(PHIV_K[, 2])
+lab <- c("min", "q1", "M", "q3", "max")
+dependenceAnalysisPlot(x = PHIV_K,  asp = NA,
+                       main = "Observed data",
+                       xlabels = lab, ylabels = lab,
+                       xGridBreaks = xpixelse,
+                       yGridBreaks = ypixelse)
+uv <- cbind(theta = CDF_PHIV, X = CDF_K)
+xpixelseUV <- c(0, .25, .5, .75, 1)
+dependenceAnalysisPlot(x = uv,
+                       main = "Pseudo-observations",
+                       xGridBreaks = xpixelseUV)
+
+
+```
+
+
+```{r, fig.show='hold'}
+r_xy   <- cor(x = PHIV_K[,2], y = PHIV_K[,1], method = "pearson")
+rho_xy <- cor(x = PHIV_K[,2], y = PHIV_K[,1], method = "spearman")
+cc <- sprintf("Pearson = %.3f, Spearman =  %.3f", r_xy, rho_xy)
+print(cc)
+hoefCOP(para=as.data.frame(uv), as.sample=TRUE)
+empCopulaCountsmatrix <- empiricalCDF2Dcounts(uv)
+fDiffEmpCopMatrix <- forwardDifference(empCopulaCountsmatrix)
+n <- nrow(PHIV_K)
+diffEC_matrix <- (1/n) * empiricalCDF2Dcounts(uv)
+xPlot <- seq.int(0, 1, by = 1 / n) - 1/(2 * n) # correction needed for Fn to be assigned to the righ upper corner of the pixel. See hist2D function
+Levels <- seq.int(0, 1, by = 0.1)
+# UV pixelsplot
+# whiter colors mean higher Fn values, warmer color mean lower Fn values
+image(x = xPlot, y = xPlot, z = diffEC_matrix,
+      main = "Empirical copula and \npseudo-observations", xlab = "u", ylab = "V",
+      asp = 1, breaks = Levels, col = heat.colors(length(Levels) - 1))
+points(uv, pch = 20, cex = 0.5)
+```
+
+
+```{r, include = FALSE}
+# Independence Test (Genest and Rémillard)
+uv_ind <- indepTestSim(n, 2) # step (i)
+uv_ind_test <- indepTest(uv, uv_ind) # step (ii)
+```
+
+
+```{r, fig.show='hold'}
+# Independence Test (Genest and Rémillard)
+uv_ind_test
+dependogram(uv_ind_test, print=TRUE) # step (iii)
+# UV contourplot
+contour(x = xPlot, y = xPlot, z = diffEC_matrix,
+        lty = 3, levels = Levels, labcex = 1,
+        main = "Empirical copula \ncontour plot",
+        # add = TRUE,
+        xlab = "U", ylab = "V", asp = 1)
+```
+
+```{r, fig.show='hold'}
+plotProbs(uv, main = "380 pseudo-observations",
+     pch = 20, xlab = "u", ylab = "v")
+simuv <- uvSim(n = 200, diffEC = fDiffEmpCopMatrix)
+plotProbs(simuv, main = "simulated 200 \n pseudo-observations",
+     pch = 20, xlab = "u_sim", ylab = "v_sim")
+```
+
+
+```{r, fig.show='hold'}
+plot(PHIV_K,
+     xlim = c(0, 0.43), ylim = c(0,4500),
+     pch = 20,
+     xlab = "PHIV", ylab = "K",
+     main = "380 Original")
+
+# xth = runif(10^4)
+# xsimMom <- dat2bernqua(f = simuv[, 1], x = PHIV_K[, 1], poly.type= "Kantorovich")
+x_sim <- sapply(simuv[, 1], Fn.inv.Bernshtein, valores.emp = PHIV_K[, 1])
+y_sim <- sapply(simuv[, 2], Fn.inv.Bernshtein, valores.emp = PHIV_K[, 2])
+plot(x_sim, y_sim,
+     xlim = c(0, 0.43), ylim = c(0,4500),
+     pch = 20,
+     xlab = "PHIV_sim", ylab = "K_sim",
+     main = "200 Simulations")
+
+```
+
+See also `example 2` of the function `uvSim` to see examples of a simulation constrained (conditional) to one variable.
