@@ -1,0 +1,8 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+         title = "{bernstein}: An R package to compute Bernstein-Bezier functions",
+         author = c(person("Francisco", "Mendoza Torres", role = c("aut","cre"), email = "mentofran@gmail.com"), person("Arturo", "Erdely", role = c("aut","cre"), email = "arturo.erdely@comunidad.unam.mx"), person("Martin", "Diaz-Viera", role = c("aut"), email = "mdiazv@imp.mx"))),
+         year = 2017,
+         url = "https://github.com/mathphysmx/bernstein")

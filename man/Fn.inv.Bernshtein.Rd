@@ -22,3 +22,6 @@ This is the same function as lmomco:::dat2bernqua
 \references{
 Munoz-Perez and Fernandez-Palacin, 1987. Bernstein-Kantorovich polynomial
 }
+\author{
+Arturo Erdely (\email{arturo.erdely@comunidad.unam.mx})
+}
