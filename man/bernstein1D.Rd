@@ -18,14 +18,16 @@ Numeric scalar, the value of the Bernstein-Bezier curve.
 Univariate Bernstein-Bezier function.
 }
 \examples{
+# Example 1:
 ex <- seq(0,1, length.out=5)
-eF <- sin(2*pi*ex); plot(ex, eF)
+ey <- sin(2*pi*ex); plot(ex, ey)
 exB <- seq(0,1, by = 0.01)
-for(i in 1:length(exB)){
-eFB <- bernstein1D(x=exB[i], y=eF);
-points(exB[i], eFB, pch = '+')
-}
+eyB <- sapply(exB, bernstein1D, y = ey)
+points(exB,eyB, pch = "+")
 
+# Example 2 (Bernstein-Kantorovich)
+eyE <- c(ey[1], (ey[-1] + head(ey, -1))/2, tail(ey, 1))
+eyEB <- sapply(exB, bernstein1D, y = eyE)
 }
 \author{
 Francisco Mendoza-Torres (\email{mentofran@gmail.com})

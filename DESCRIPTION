@@ -3,9 +3,9 @@ Type: Package
 Title: Bernstein-bezier curves and surfaces
 Version: 0.1.0
 Authors@R: c(
-    person("Mendoza-Torres", "Francisco", email = "mentofran@gmail.com",             role = c("aut", "cre")),
-    person("Erdely",            "Arturo", email = "arturo.erdely@comunidad.unam.mx", role = "aut"),
-    person("Diaz-Viera",     "Martin A.", email = "mdiazv@imp.mx",                   role = "aut"))
+    person("Francisco", "Mendoza-Torres", email = "mentofran@gmail.com",             role = c("aut", "cre")),
+    person("Arturo",    "Erdely",         email = "arturo.erdely@comunidad.unam.mx", role = "aut"),
+    person("Martin A.", "Diaz-Viera",     email = "mdiazv@imp.mx",                   role = "aut"))
 Depends:
     R (>= 3.2)
 Maintainer: Francisco Mendoza-Torres <mentofran@gmail.com>

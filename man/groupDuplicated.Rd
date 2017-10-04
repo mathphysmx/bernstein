@@ -29,4 +29,5 @@ xe <- as.matrix(airquality[, 1:2])
 xe <- xe[complete.cases(xe), ]
 xec <- groupDuplicated(x = xe)
 any(duplicated(xec[, 1]))
+# a possible solution could be to add a small error but the dependence structure is modified by this approach.
 }
