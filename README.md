@@ -7,6 +7,9 @@ devtools::install_github("mathphysmx/bernstein", build_vignettes = TRUE)
 ```
 
 # Tutorial
+Run in R command line:
+
+
 ```R
 vignette("bernsteinCopula", "bernstein")
 ```
